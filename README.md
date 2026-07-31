@@ -44,7 +44,7 @@ winget install Gyan.FFmpeg
 ### macOS and Linux
 
 ```bash
-git clone <your-repository-url>
+git clone git@github.com:yuege969/FluxDL.git
 cd fluxdl
 chmod +x start.sh
 ./start.sh
@@ -55,7 +55,7 @@ The launcher uses `uv` when available. Otherwise it creates `.venv` and installs
 ### Windows
 
 ```powershell
-git clone <your-repository-url>
+git clone git@github.com:yuege969/FluxDL.git
 cd fluxdl
 py -m venv .venv
 .\.venv\Scripts\python -m pip install --editable .

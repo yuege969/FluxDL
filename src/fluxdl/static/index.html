@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="generator" content="FluxDL" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FluxDL — 基于 yt-dlp 的私密、本地优先视频下载工具。"
+    />
+    <meta name="theme-color" content="#101111" />
+    <title>FluxDL · 本地视频下载器</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="FluxDL 首页">
+        <span class="brand-mark"><i></i><i></i><i></i></span>
+        <span>FLUX<span>DL</span></span>
+      </a>
+      <div class="system-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="system-label">正在连接本地引擎</span>
+        <span class="version-tag" id="version-tag">—</span>
+      </div>
+      <a
+        class="source-link"
+        href="https://github.com/yt-dlp/yt-dlp"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span>开源引擎</span>
+        <b>↗</b>
+      </a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span>LOCAL FIRST</span><i></i><span>PRIVATE BY DESIGN</span></div>
+        <h1>把视频带回<br /><em>你的硬盘。</em></h1>
+        <p>
+          粘贴链接，选择你需要的画质。解析和下载都在本机完成，
+          不上传链接，不经过第三方服务器。
+        </p>
+
+        <div class="url-shell" id="url-shell">
+          <label for="url-input">视频链接</label>
+          <div class="url-row">
+            <input
+              id="url-input"
+              type="url"
+              inputmode="url"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="https://www.youtube.com/watch?v=..."
+              aria-describedby="url-help"
+            />
+            <button class="paste-btn" id="paste-btn" type="button">粘贴</button>
+            <button class="inspect-btn" id="inspect-btn" type="button">
+              <span>解析视频</span><b>→</b>
+            </button>
+          </div>
+          <div class="url-meta" id="url-help">
+            <span>支持 YouTube、Bilibili、X、Instagram 等数千个站点</span>
+            <span class="kbd"><kbd>⌘</kbd><kbd>V</kbd></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" id="workspace" aria-live="polite">
+        <article class="preview-panel">
+          <div class="panel-heading">
+            <span>01</span>
+            <div>
+              <h2>视频预览</h2>
+              <p>确认你将要下载的内容</p>
+            </div>
+          </div>
+
+          <div class="empty-preview" id="empty-preview">
+            <div class="scan-frame">
+              <i></i><i></i><i></i><i></i>
+              <span class="play-symbol">▶</span>
+              <b></b>
+            </div>
+            <h3>等待视频链接</h3>
+            <p>解析后，视频封面和基本信息会显示在这里。</p>
+          </div>
+
+          <div class="video-preview hidden" id="video-preview">
+            <div class="thumb-wrap">
+              <img id="video-thumb" alt="" />
+              <div class="thumb-duration" id="video-duration"></div>
+              <div class="thumb-source" id="video-source"></div>
+            </div>
+            <div class="video-copy">
+              <p id="video-uploader"></p>
+              <h3 id="video-title"></h3>
+              <div class="video-facts">
+                <span id="video-views"></span>
+                <span id="video-date"></span>
+              </div>
+              <div class="quality-list" id="quality-list"></div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="config-panel">
+          <div class="panel-heading">
+            <span>02</span>
+            <div>
+              <h2>下载设置</h2>
+              <p>选择格式与输出质量</p>
+            </div>
+          </div>
+
+          <div class="mode-switch" role="tablist" aria-label="下载类型">
+            <button class="active" role="tab" aria-selected="true" data-mode="video">视频</button>
+            <button role="tab" aria-selected="false" data-mode="audio">仅音频</button>
+          </div>
+
+          <div class="setting-group" id="quality-group">
+            <div class="setting-label">
+              <label for="quality-select">视频画质</label>
+              <span>自动选择最佳码率</span>
+            </div>
+            <div class="select-wrap">
+              <select id="quality-select">
+                <option value="best">最佳可用画质</option>
+                <option value="2160">4K · 2160p</option>
+                <option value="1440">2K · 1440p</option>
+                <option value="1080">Full HD · 1080p</option>
+                <option value="720">HD · 720p</option>
+                <option value="480">SD · 480p</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-label">
+              <label>文件格式</label>
+              <span id="format-hint">兼容性优先</span>
+            </div>
+            <div class="format-grid" id="video-formats">
+              <button class="format-option active" data-format="mp4"><b>MP4</b><span>通用</span></button>
+              <button class="format-option" data-format="mkv"><b>MKV</b><span>高质</span></button>
+            </div>
+            <div class="format-grid hidden" id="audio-formats">
+              <button class="format-option active" data-format="mp3"><b>MP3</b><span>通用</span></button>
+              <button class="format-option" data-format="m4a"><b>M4A</b><span>高效</span></button>
+              <button class="format-option" data-format="opus"><b>OPUS</b><span>高质</span></button>
+              <button class="format-option" data-format="wav"><b>WAV</b><span>无损</span></button>
+            </div>
+          </div>
+
+          <div class="toggles">
+            <label class="toggle-row">
+              <span><b>下载字幕</b><small>优先中文与英文字幕</small></span>
+              <input id="subtitle-toggle" type="checkbox" />
+              <i></i>
+            </label>
+            <label class="toggle-row">
+              <span><b>嵌入封面</b><small>需要本机安装 FFmpeg</small></span>
+              <input id="thumbnail-toggle" type="checkbox" />
+              <i></i>
+            </label>
+          </div>
+
+          <button class="download-btn" id="download-btn" disabled>
+            <span>开始下载</span>
+            <span class="download-icon">↓</span>
+          </button>
+          <p class="legal-note">请仅下载你有权保存的内容，并遵守来源网站的服务条款。</p>
+        </aside>
+      </section>
+
+      <section class="queue-section">
+        <div class="queue-header">
+          <div>
+            <span class="section-index">03</span>
+            <h2>下载队列</h2>
+          </div>
+          <div class="queue-actions">
+            <span id="download-location">文件保存在项目 downloads 文件夹</span>
+            <button id="clear-history" type="button">清除已完成</button>
+          </div>
+        </div>
+        <div class="queue-list" id="queue-list">
+          <div class="queue-empty" id="queue-empty">
+            <span>队列空闲</span>
+            <p>开始下载后，实时进度会显示在这里。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>FLUXDL / LOCAL MEDIA UTILITY</span>
+      <span>POWERED BY <a href="https://github.com/yt-dlp/yt-dlp" target="_blank" rel="noreferrer">YT-DLP</a></span>
+    </footer>
+
+    <dialog class="subtitle-dialog" id="subtitle-dialog">
+      <form method="dialog" class="subtitle-card" id="subtitle-form">
+        <div class="subtitle-head">
+          <div>
+            <span>LOCAL AI / SUBTITLE LAB</span>
+            <h2>生成 AI 字幕</h2>
+          </div>
+          <button type="button" class="dialog-close" id="subtitle-close" aria-label="关闭">×</button>
+        </div>
+        <p class="subtitle-video-title" id="subtitle-video-title"></p>
+
+        <div class="subtitle-field">
+          <label for="subtitle-model">识别精度</label>
+          <div class="select-wrap">
+            <select id="subtitle-model">
+              <option value="tiny">极速 · Tiny（约 75 MB）</option>
+              <option value="base" selected>均衡 · Base（约 145 MB）</option>
+              <option value="small">准确 · Small（约 460 MB）</option>
+            </select>
+          </div>
+          <small>模型仅在首次使用时下载，之后可完全离线运行。</small>
+        </div>
+
+        <div class="subtitle-field">
+          <label for="subtitle-target">字幕输出</label>
+          <div class="select-wrap">
+            <select id="subtitle-target">
+              <option value="zh" selected>简体中文翻译</option>
+              <option value="bilingual">原文 + 简体中文双语</option>
+              <option value="original">仅原语言转写</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="subtitle-embed">
+          <span>
+            <b>嵌入视频</b>
+            <small>同时生成一个带可开关字幕的 MKV 文件</small>
+          </span>
+          <input id="subtitle-embed" type="checkbox" checked />
+          <i></i>
+        </label>
+
+        <div class="subtitle-privacy">
+          <b>100% 本地处理</b>
+          <span>音频不会上传到任何服务器。首次使用需要联网下载识别与翻译模型。</span>
+        </div>
+        <button class="subtitle-submit" id="subtitle-submit" type="submit">
+          <span>开始生成</span><b>→</b>
+        </button>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

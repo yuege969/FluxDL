@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fluxdl"
+version = "1.0.0"
+description = "A private, local-first web interface for yt-dlp"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["yt-dlp", "video-downloader", "subtitles", "whisper", "local-first"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Web Environment",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+]
+dependencies = [
+  "argostranslate>=1.11.0",
+  "faster-whisper>=1.2.1",
+  "yt-dlp[default]",
+]
+
+[project.scripts]
+fluxdl = "fluxdl.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fluxdl"]

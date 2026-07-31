@@ -44,7 +44,7 @@ winget install Gyan.FFmpeg
 ### macOS 和 Linux
 
 ```bash
-git clone <你的仓库地址>
+git clone git@github.com:yuege969/FluxDL.git
 cd fluxdl
 chmod +x start.sh
 ./start.sh
@@ -55,7 +55,7 @@ chmod +x start.sh
 ### Windows
 
 ```powershell
-git clone <你的仓库地址>
+git clone git@github.com:yuege969/FluxDL.git
 cd fluxdl
 py -m venv .venv
 .\.venv\Scripts\python -m pip install --editable .
